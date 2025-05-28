@@ -1,7 +1,22 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class CubeExperiment extends JPanel {
+
+    private double angle = 0.0;
+    private final Timer timer;
+
+    public CubeExperiment() {
+        timer = new Timer(50, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                angle += Math.toRadians(5); // Roter 5 grader hver frame
+                repaint();
+            }
+        });
+        timer.start();
+    }
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -26,14 +41,12 @@ public class CubeExperiment extends JPanel {
 
         for (int x = 0; x < xCount; x++) {
             for (int y = 0; y < yCount; y++) {
-                int xi = xStart + x;
-                int yi = yStart + y;
+                Position3D point = new Position3D(xStart + x, yStart + y, z);
+                point.rotateAroundZ(angle);
 
-                Position3D pos = new Position3D(xi, yi, z);
-
-                double scale = (z + 3) / 3.0;
-                int x2d = (int) (centerX + pos.x * scale * 80);
-                int y2d = (int) (centerY + pos.y * scale * 80);
+                double scale = (point.z + 3) / 3.0;
+                int x2d = (int) (centerX + point.x * scale * 80);
+                int y2d = (int) (centerY + point.y * scale * 80);
                 int radius = (int) (scale * 10);
                 g2.fillOval(x2d - radius / 2, y2d - radius / 2, radius, radius);
             }
