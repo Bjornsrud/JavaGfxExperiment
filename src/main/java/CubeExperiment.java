@@ -29,9 +29,11 @@ public class CubeExperiment extends JPanel {
                 int xi = xStart + x;
                 int yi = yStart + y;
 
+                Position3D pos = new Position3D(xi, yi, z);
+
                 double scale = (z + 3) / 3.0;
-                int x2d = (int) (centerX + xi * scale * 80);
-                int y2d = (int) (centerY + yi * scale * 80);
+                int x2d = (int) (centerX + pos.x * scale * 80);
+                int y2d = (int) (centerY + pos.y * scale * 80);
                 int radius = (int) (scale * 10);
                 g2.fillOval(x2d - radius / 2, y2d - radius / 2, radius, radius);
             }
