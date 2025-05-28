@@ -22,4 +22,13 @@ public class Position3D {
         this.x = newX;
         this.z = newZ;
     }
+
+    public void rotateAroundX(double angle) {
+        double cosA = Math.cos(angle);
+        double sinA = Math.sin(angle);
+        double newY = y * cosA - z * sinA;
+        double newZ = y * sinA + z * cosA;
+        this.y = newY;
+        this.z = newZ;
+    }
 }
