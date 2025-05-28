@@ -13,16 +13,18 @@ public class CubeExperiment extends JPanel {
         int centerX = getWidth() / 2;
         int centerY = getHeight() / 2;
 
-        // Ett enkelt punkt i senter av kuben
-        double x = 0;
-        double y = 0;
+        // Hele z = 0-planet. x og y fra -1 til 1
         double z = 0;
 
-        double scale = (z + 3) / 3.0;
-        int x2d = (int) (centerX + x * scale * 80);
-        int y2d = (int) (centerY + y * scale * 80);
-        int radius = (int) (scale * 10);
-        g2.fillOval(x2d - radius / 2, y2d - radius / 2, radius, radius);
+        for (int x = -1; x <= 1; x++) {
+            for (int y = -1; y <= 1; y++) {
+                double scale = (z + 3) / 3.0;
+                int x2d = (int) (centerX + x * scale * 80);
+                int y2d = (int) (centerY + y * scale * 80);
+                int radius = (int) (scale * 10);
+                g2.fillOval(x2d - radius / 2, y2d - radius / 2, radius, radius);
+            }
+        }
     }
 
     public static void main(String[] args) {
