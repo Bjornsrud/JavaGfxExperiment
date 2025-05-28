@@ -1,19 +1,18 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CubeExperiment extends JPanel {
 
-    private double angle = 0.0;
-    private final Timer timer;
+    private double rotationAngleZ = 0;
+    private double rotationAngleY = 0;
 
     public CubeExperiment() {
-        timer = new Timer(50, new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                angle += Math.toRadians(5); // Roter 5 grader hver frame
-                repaint();
-            }
+        Timer timer = new Timer(40, e -> {
+            rotationAngleZ += 0.02;
+            rotationAngleY += 0.01;
+            repaint();
         });
         timer.start();
     }
@@ -25,32 +24,49 @@ public class CubeExperiment extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
 
         drawGrid(g2, -1, 7, 7);
-
-        drawPlaneZ(-1, g2, new Color(0, 0, 200), 3, 3);   // Bakplan
-        drawPlaneZ(0, g2, new Color(0, 200, 0), 3, 3);     // Midtplan
-        drawPlaneZ(1, g2, new Color(200, 0, 0), 3, 3);    // Frontplan
+        drawCubePlanes(g2);
     }
 
-    private void drawPlaneZ(double z, Graphics2D g2, Color color, int xCount, int yCount) {
-        g2.setColor(color);
-        int centerX = getWidth() / 2;
-        int centerY = getHeight() / 2;
+    private void drawCubePlanes(Graphics2D g2) {
+        drawPlaneAtZ(-1, g2, new Color(0, 0, 200), 3, 3);  // Bakplan
+        drawPlaneAtZ(0, g2, new Color(0, 200, 0), 3, 3);    // Midtplan
+        drawPlaneAtZ(1, g2, new Color(200, 0, 0), 3, 3);    // Frontplan
+    }
 
+    private void drawPlaneAtZ(double z, Graphics2D g2, Color color, int xCount, int yCount) {
+        List<Position3D> points = generatePlanePoints(z, xCount, yCount);
+        transformAndDrawPoints(points, g2, color);
+    }
+
+    private List<Position3D> generatePlanePoints(double z, int xCount, int yCount) {
+        List<Position3D> points = new ArrayList<>();
         int xStart = -xCount / 2;
         int yStart = -yCount / 2;
 
         for (int x = 0; x < xCount; x++) {
             for (int y = 0; y < yCount; y++) {
-                Position3D point = new Position3D(xStart + x, yStart + y, z);
-                point.rotateAroundZ(angle);
-                point.rotateAroundY(angle);
-
-                double scale = (point.z + 3) / 3.0;
-                int x2d = (int) (centerX + point.x * scale * 80);
-                int y2d = (int) (centerY + point.y * scale * 80);
-                int radius = (int) (scale * 10);
-                g2.fillOval(x2d - radius / 2, y2d - radius / 2, radius, radius);
+                int xi = xStart + x;
+                int yi = yStart + y;
+                points.add(new Position3D(xi, yi, z));
             }
+        }
+        return points;
+    }
+
+    private void transformAndDrawPoints(List<Position3D> points, Graphics2D g2, Color color) {
+        g2.setColor(color);
+        int centerX = getWidth() / 2;
+        int centerY = getHeight() / 2;
+
+        for (Position3D point : points) {
+            point.rotateAroundZ(rotationAngleZ);
+            point.rotateAroundY(rotationAngleY);
+
+            double scale = (point.z + 3) / 3.0;
+            int x2d = (int) (centerX + point.x * scale * 80);
+            int y2d = (int) (centerY + point.y * scale * 80);
+            int radius = (int) (scale * 10);
+            g2.fillOval(x2d - radius / 2, y2d - radius / 2, radius, radius);
         }
     }
 
@@ -69,7 +85,7 @@ public class CubeExperiment extends JPanel {
             int x = (int) (centerX + xi * scale * 80);
             int yTop = (int) (centerY + yStart * scale * 80);
             int yBottom = (int) (centerY + (yStart + yCount - 1) * scale * 80);
-            g2.drawLine(x, yTop, x, yBottom); // vertikale
+            g2.drawLine(x, yTop, x, yBottom);
         }
 
         for (int j = 0; j < yCount; j++) {
@@ -77,18 +93,15 @@ public class CubeExperiment extends JPanel {
             int y = (int) (centerY + yi * scale * 80);
             int xLeft = (int) (centerX + xStart * scale * 80);
             int xRight = (int) (centerX + (xStart + xCount - 1) * scale * 80);
-            g2.drawLine(xLeft, y, xRight, y); // horisontale
+            g2.drawLine(xLeft, y, xRight, y);
         }
 
-        // Ramme
-        int topLeftX = (int)(centerX + xStart * scale * 80);
-        int topLeftY = (int)(centerY + yStart * scale * 80);
-        int sizeX = (int)(scale * 80 * (xCount - 1));
-        int sizeY = (int)(scale * 80 * (yCount - 1));
+        int topLeftX = (int) (centerX + xStart * scale * 80);
+        int topLeftY = (int) (centerY + yStart * scale * 80);
+        int sizeX = (int) (scale * 80 * (xCount - 1));
+        int sizeY = (int) (scale * 80 * (yCount - 1));
         g2.drawRect(topLeftX, topLeftY, sizeX, sizeY);
     }
-
-
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("CubeExperiment");
