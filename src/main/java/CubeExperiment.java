@@ -8,24 +8,36 @@ public class CubeExperiment extends JPanel {
         super.paintComponent(g);
         setBackground(Color.BLACK);
         Graphics2D g2 = (Graphics2D) g;
-        g2.setColor(new Color(200, 200, 0)); // Yellow
 
+
+        drawPlaneZ(-1, g2, new Color(0, 0, 200), 3, 3);   // Bakplan
+        drawPlaneZ(0, g2, new Color(0, 200, 0), 3, 3);     // Midtplan
+        drawPlaneZ(1, g2, new Color(200, 0, 0), 3, 3);    // Frontplan
+    }
+
+    private void drawPlaneZ(double z, Graphics2D g2, Color color, int xCount, int yCount) {
+        g2.setColor(color);
         int centerX = getWidth() / 2;
         int centerY = getHeight() / 2;
 
-        // Hele z = 0-planet. x og y fra -1 til 1
-        double z = 0;
+        int xStart = -xCount / 2;
+        int yStart = -yCount / 2;
 
-        for (int x = -1; x <= 1; x++) {
-            for (int y = -1; y <= 1; y++) {
+        for (int x = 0; x < xCount; x++) {
+            for (int y = 0; y < yCount; y++) {
+                int xi = xStart + x;
+                int yi = yStart + y;
+
                 double scale = (z + 3) / 3.0;
-                int x2d = (int) (centerX + x * scale * 80);
-                int y2d = (int) (centerY + y * scale * 80);
+                int x2d = (int) (centerX + xi * scale * 80);
+                int y2d = (int) (centerY + yi * scale * 80);
                 int radius = (int) (scale * 10);
                 g2.fillOval(x2d - radius / 2, y2d - radius / 2, radius, radius);
             }
         }
     }
+
+
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("CubeExperiment");
