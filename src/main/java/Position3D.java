@@ -6,4 +6,11 @@ public class Position3D {
         this.y = y;
         this.z = z;
     }
+
+    public void rotateAroundZ(double angle) {
+        double newX = x * Math.cos(angle) - y * Math.sin(angle);
+        double newY = x * Math.sin(angle) + y * Math.cos(angle);
+        this.x = newX;
+        this.y = newY;
+    }
 }
