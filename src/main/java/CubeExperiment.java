@@ -7,11 +7,13 @@ public class CubeExperiment extends JPanel {
 
     private double rotationAngleZ = 0;
     private double rotationAngleY = 0;
+    private double rotationAngleX = 0;
 
     public CubeExperiment() {
-        Timer timer = new Timer(40, e -> {
-            rotationAngleZ += 0.02;
-            rotationAngleY += 0.01;
+        Timer timer = new Timer(10, e -> {
+            rotationAngleZ += 0.01;
+            rotationAngleY += 0.015;
+            rotationAngleX += 0.008;
             repaint();
         });
         timer.start();
@@ -59,8 +61,9 @@ public class CubeExperiment extends JPanel {
         int centerY = getHeight() / 2;
 
         for (Position3D point : points) {
-            point.rotateAroundZ(rotationAngleZ);
+            point.rotateAroundX(rotationAngleX);
             point.rotateAroundY(rotationAngleY);
+            point.rotateAroundZ(rotationAngleZ);
 
             double scale = (point.z + 3) / 3.0;
             int x2d = (int) (centerX + point.x * scale * 80);
