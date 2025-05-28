@@ -13,4 +13,13 @@ public class Position3D {
         this.x = newX;
         this.y = newY;
     }
+
+    public void rotateAroundY(double angle) {
+        double cosA = Math.cos(angle);
+        double sinA = Math.sin(angle);
+        double newX = x * cosA + z * sinA;
+        double newZ = -x * sinA + z * cosA;
+        this.x = newX;
+        this.z = newZ;
+    }
 }

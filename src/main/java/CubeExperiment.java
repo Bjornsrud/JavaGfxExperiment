@@ -43,6 +43,7 @@ public class CubeExperiment extends JPanel {
             for (int y = 0; y < yCount; y++) {
                 Position3D point = new Position3D(xStart + x, yStart + y, z);
                 point.rotateAroundZ(angle);
+                point.rotateAroundY(angle);
 
                 double scale = (point.z + 3) / 3.0;
                 int x2d = (int) (centerX + point.x * scale * 80);
