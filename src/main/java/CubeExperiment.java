@@ -11,6 +11,8 @@ public class CubeExperiment extends JPanel {
     private double angleX = 0;
 
     GridRenderer grid;
+    ScrollTextRenderer scrollText;
+
 
     public CubeExperiment() {
         Timer timer = new Timer(30, e -> {
@@ -21,6 +23,17 @@ public class CubeExperiment extends JPanel {
         });
         timer.start();
         grid = new GridRenderer();
+        String textForScroller = """
+                              *** Welcome to this fun, little experiment!       
+                Have you ever had sudden flashbacks to things you saw or did in your youth? I had one yesterday, where 
+                I remembered the intros to cracked computer games on the C64, usually with a scroll text, music, and some
+                kind of graphical effect. Well, as an adult, I work as a software developer, but as I work mostly backend, 
+                I haven't done much coding that could be usefull for recreating the C64 intros. It was time to learn, and 
+                try to make something fun in Java. :) All code by me (CKB78). 
+               \s""";
+
+        String fontFileName = "MinecartLCD.ttf";
+        scrollText = new ScrollTextRenderer(fontFileName, textForScroller, 5f, new Color(240, 200, 0), 48f);
     }
 
     @Override
@@ -31,7 +44,7 @@ public class CubeExperiment extends JPanel {
 
         // grid.drawGrid(g2, -1, 7, 7, getWidth(), getHeight());
         grid.draw3dGrid(g2, 32, 20, 0.5, getWidth(), getHeight());
-
+        scrollText.draw(g2, getWidth());
         drawCubePlanes(g2);
     }
 
@@ -87,7 +100,7 @@ public class CubeExperiment extends JPanel {
         JFrame frame = new JFrame("CubeExperiment");
         CubeExperiment panel = new CubeExperiment();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500, 500);
+        frame.setSize(600, 600);
         frame.add(panel);
         frame.setVisible(true);
     }
