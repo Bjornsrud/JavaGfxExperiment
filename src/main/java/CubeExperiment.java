@@ -26,7 +26,8 @@ public class CubeExperiment extends JPanel {
         setBackground(Color.BLACK);
         Graphics2D g2 = (Graphics2D) g;
 
-        drawGrid(g2, -1, 7, 7);
+        // drawGrid(g2, -1, 7, 7);
+        draw3dGrid(g2, 32, 20, 0.5);
         drawCubePlanes(g2);
     }
 
@@ -110,6 +111,49 @@ public class CubeExperiment extends JPanel {
         int sizeY = (int) (scale * 80 * (yCount - 1));
         g2.drawRect(topLeftX, topLeftY, sizeX, sizeY);
     }
+
+    private void draw3dGrid(Graphics2D g2, double xCount, int zCount, double yValue) {
+        g2.setColor(new Color(40, 80, 0));
+        int centerX = getWidth() / 2;
+        int centerY = getHeight() / 2 + 20; // Horisonten nær midten
+
+        double xStart = -xCount / 2;
+        double z = 1.0;
+        double zMax = zCount;
+
+        // Horisontale linjer (i z-retning) med justert progresjon
+        while (z < zMax) {
+            double scale = (z + 3) / 3.0;
+            int y = (int) (centerY + yValue * scale * 80);
+
+            int xLeft = (int) (centerX + xStart * scale * 80);
+            int xRight = (int) (centerX + (xStart + xCount) * scale * 80);
+
+            g2.drawLine(xLeft, y, xRight, y);
+
+            z += Math.pow(z, 1.1) * 0.3 + 0.50;
+        }
+
+        // Vertikale linjer (i x-retning)
+        for (double xi = xStart; xi <= xStart + xCount; xi += 0.5) {
+            boolean first = true;
+            int prevX = 0, prevY = 0;
+
+            for (int zi = 1; zi <= zCount; zi++) {
+                double scale = (zi + 3) / 3.0;
+                int x = (int) (centerX + xi * scale * 80);
+                int y = (int) (centerY + yValue * scale * 80);
+
+                if (!first) {
+                    g2.drawLine(prevX, prevY, x, y);
+                }
+                prevX = x;
+                prevY = y;
+                first = false;
+            }
+        }
+    }
+
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("CubeExperiment");
